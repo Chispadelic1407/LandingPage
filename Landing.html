@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sebastian Vernis - Soluciones Web y Marketing Digital</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Tailwind CSS para el nuevo catálogo -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Feather Icons para los íconos del modal -->
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- Estilos CSS integrados (Tus estilos originales + nuevos para el modal) -->
+  <style>
+    /* Estilos generales y de reset (Originales) */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box; 
+    }
+
+    html {
+        /* El comportamiento de scroll suave se maneja con JS para compensar el header */
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #121212; 
+      color: #f0f0f0; 
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    /* Header y Navegación (Originales) */
+    header nav {
+      background: #212121; 
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0, 0.2); 
+      position: sticky; 
+      top: 0;
+      z-index: 1000;
+    }
+
+    header nav a {
+      color: #f0f0f0;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: bold;
+      display: inline-block;
+      transition: color 0.3s ease;
+    }
+
+    header nav a:hover, header nav a.activo {
+      color: #e91e63; 
+    }
+
+    /* Estructura de Secciones (Original) */
+    main#inicio,
+    section#servicios,
+    section#catalogo,
+    section#tienda,
+    section#contacto {
+      display: none; 
+      animation: fadeInSection 0.5s ease-in-out forwards; 
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: #1c1c1c; 
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+    }
+
+    main#inicio.visible-section,
+    section#servicios.visible-section,
+    section#catalogo.visible-section,
+    section#tienda.visible-section,
+    section#contacto.visible-section {
+      display: block; 
+    }
+
+    @keyframes fadeInSection {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Títulos (Originales) */
+    h1, h2, h3 { 
+      text-align: center;
+      color: #9c27b0; 
+    }
+    h1 { margin-bottom: 1.5rem; font-size: 1.9em; }
+    h2 { margin-bottom: 1.2rem; font-size: 1.6em;}
+    h3 { margin-bottom: 0.8rem; font-size: 1.25em;}   
+
+    /* Sección Hero (Original) */
+    .hero { 
+      text-align: center;
+      padding-top: 0.5rem;
+      padding-bottom: 1rem;
+    }
+    .hero h1 { color: #e91e63; font-size: 2em; } 
+    .hero p { font-size: 1.05em; color: #ccc; }
+
+    .hero button {
+      background: #e91e63; 
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .hero button:hover {
+      background: #c2185b; 
+    }
+
+    /* Títulos de sección principales (Originales) */
+    section#servicios > h1,
+    section#catalogo > h1,
+    section#tienda > h1,
+    section.diferenciadores > h2 {
+        text-align: center; 
+        margin-bottom: 1.5rem;
+        color: #9c27b0; 
+        border-bottom: none; 
+        cursor: default;
+        font-size: 1.7em; 
+    }
+    #servicios-content-wrapper,
+    #catalogo-content-wrapper,
+    #tienda-content-wrapper,
+    #diferenciadores-content {
+      margin-top: 0; 
+      max-height: none;
+      overflow: visible;
+      padding-top: 0; 
+      padding-bottom: 0;
+    }
+
+    /* Sección Diferenciadores (Original) */
+    .diferenciadores ul { 
+      list-style: disc inside;
+      max-width: 600px;
+      margin: 0 auto; 
+      padding-left: 0; 
+      color: #ddd;
+      text-align: left;
+    }
+    .diferenciadores ul li {
+      margin-bottom: 0.6rem;
+    }
+
+    /* CTA Secundario (Original) */
+    .cta-secundaria { 
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .cta-secundaria button {
+      background: #9c27b0; 
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 0.8rem 2rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .cta-secundaria button:hover {
+      background: #7b1fa2; 
+    }
+
+    /* Estilos para Categorías de Servicios (Originales) */
+    .categoria-servicios-container {
+      margin-bottom: 2rem;
+      width: 100%;
+    }
+    .categoria-servicios-titulo {
+      color: #e91e63; 
+      text-align: left; 
+      font-size: 1.5em;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #333;
+    }
+    .servicios-lista-categoria { 
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      justify-content: flex-start; 
+    }
+
+    /* Tarjeta de Servicio (Original) */
+    .servicio-card {
+      background: #212121; 
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      width: 290px;
+      padding: 1.2rem;
+      text-align: center; 
+      transition: transform 0.2s ease-in-out;
+      margin-bottom: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .servicio-card:hover {
+      transform: translateY(-4px);
+    }
+    .servicio-media {
+        width: 100%;
+        height: 150px;
+        background-color: #2c2c2c;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        font-size: 0.9em;
+    }
+    .servicio-media img, .servicio-media video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .servicio-card h3 { 
+      margin: 0.4rem 0; 
+      font-size: 1.2em;
+      color: #f0f0f0; 
+      text-align: center; 
+    }
+    .servicio-card .enfoque { 
+      font-weight: bold;
+      font-size: 0.95rem;
+      margin: 0.2rem 0 0.6rem 0;
+      text-align: center;
+      color: #e91e63;
+    }
+    .servicio-card p { 
+        color: #ccc;
+        font-size: 0.9em;
+        text-align: left; 
+    }
+    
+    /* Formulario de Contacto (Original) */
+    #profilingForm { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.8rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.25rem; }
+    #profilingForm label { color: #ddd; font-size: 0.95rem; text-align: left; margin-bottom: 0.1rem; font-weight: bold; }
+    #profilingForm input, #profilingForm select, #profilingForm textarea { width: 100%; padding: 0.7rem 0.9rem; border-radius: 6px; border: 1px solid #555; font-size: 0.95rem; background-color: #2c2c2c; color: #f0f0f0; }
+    #profilingForm button[type="submit"] { background: #e91e63; color: #fff; border: none; border-radius: 6px; padding: 0.8rem 1.5rem; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: background 0.3s ease; margin-top: 0.8rem; align-self: center; }
+    #profilingForm button[type="submit"]:hover { background: #c2185b; }
+
+    /* Estilos para Nuevas Secciones en Inicio (Originales) */
+    .sobre-nosotros-inicio, .nuestro-proceso-inicio { padding: 1.5rem 0.8rem; margin-top: 2rem; margin-bottom: 2rem; background-color: #212121; border-radius: 8px; }
+    .sobre-nosotros-contenido { display: flex; gap: 2rem; align-items: center; }
+    #sobre-mi-media { flex-shrink: 0; width: 150px; height: 150px; border-radius: 50%; background-color: #2c2c2c; overflow: hidden; }
+    #sobre-mi-media img { width: 100%; height: 100%; object-fit: cover; }
+    .sobre-nosotros-inicio h2, .nuestro-proceso-inicio h2 { color: #9c27b0; margin-bottom: 1.2rem; text-align: center; }
+    .proceso-pasos-container { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 1.2rem; margin-top: 1.2rem; }
+    .proceso-paso { background-color: #2c2c2c; padding: 1.2rem; border-radius: 6px; flex: 1 1 200px; min-width: 180px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); border-left: 3px solid #e91e63; }
+    .proceso-paso .paso-icono { font-size: 2.2em; margin-bottom: 0.4rem; color: #e91e63; height: 40px; }
+    .proceso-paso h3 { color: #f0f0f0; font-size: 1.1em; margin-bottom: 0.4rem; text-align: center; }
+    .proceso-paso p { color: #bbb; font-size: 0.9em; line-height: 1.5; text-align: center; }
+
+    /* Estilos para la Sección Tienda (Originales) */
+    .tienda-introduccion { text-align: center; font-size: 1.05em; color: #ccc; margin-bottom: 2rem; max-width: 650px; margin-left: auto; margin-right: auto; }
+    .tienda-productos-lista { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; }
+    .tienda-producto-card { background: #212121; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.25); width: 300px; display: flex; flex-direction: column; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; margin-bottom: 1.5rem; }
+    .tienda-producto-card:hover { transform: translateY(-4px); box-shadow: 0 5px 14px rgba(233, 30, 99, 0.3); }
+    .producto-imagen { width: 100%; height: 170px; object-fit: cover; background-color: #2c2c2c; }
+    .producto-info { padding: 1.2rem; display: flex; flex-direction: column; flex-grow: 1; text-align: left; }
+    .producto-info h3 { font-size: 1.2em; color: #f0f0f0; margin-bottom: 0.6rem; text-align: left; }
+    .producto-info .descripcion-corta { font-size: 0.9em; color: #bbb; line-height: 1.5; margin-bottom: 0.8rem; flex-grow: 1; }
+    .producto-precio { margin-bottom: 0.8rem; text-align: left; }
+    .producto-precio .precio-original { text-decoration: line-through; color: #888; font-size: 0.85em; margin-right: 0.4rem; }
+    .producto-precio .precio-final { font-size: 1.3em; font-weight: bold; color: #e91e63; }
+    .producto-info .disponibilidad { font-size: 0.8em; color: #aaa; margin-bottom: 1rem; }
+    .btn-producto-cta { background: #9c27b0; color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.3rem; font-size: 0.95rem; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; width: 100%; transition: background-color 0.3s ease; margin-top: auto; }
+    .btn-producto-cta:hover { background: #7b1fa2; }
+
+    /* Footer (Original) */
+    footer { text-align: center; padding: 1.2rem; background: #1c1c1c; color: #aaa; margin-top: 2.5rem; }
+
+    /* --- NUEVOS ESTILOS PARA EL CATÁLOGO Y MODAL --- */
+    .modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+    .modal-content { transition: transform 0.3s ease; }
+    .modal.hidden { pointer-events: none; }
+    .modal.hidden .modal-content { transform: scale(0.95); }
+    .button-style { background-color: #e91e63; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s; text-decoration: none; display: inline-block; }
+    .button-style:hover { background-color: #c2185b; }
+    
+    /* Media Queries (Originales) */
+    @media (max-width: 900px) { .tienda-producto-card { width: calc(50% - 0.75rem); } .proceso-paso { flex-basis: calc(50% - 0.75rem); } }
+    @media (max-width: 700px) { .sobre-nosotros-contenido { flex-direction: column; } }
+    @media (max-width: 600px) { main, section { padding: 0.8rem 0.4rem; margin: 0.8rem 0.4rem; border-radius: 8px; } h1 { font-size: 1.5em; } h2 { font-size: 1.3em; } section#servicios > h1, section#catalogo > h1, section#tienda > h1, section.diferenciadores > h2 { font-size: 1.4em; } .servicios-lista-categoria, .tienda-productos-lista { flex-direction: column; align-items: center; gap: 1.2rem; } .servicio-card, .tienda-producto-card { width: 100%; padding: 0.8rem; } header nav { padding: 0.8rem 0.1rem; } header nav a { margin: 0.2rem 0.2rem; font-size: 0.75rem; } .hero button, .cta-secundaria button, #toggle-filtros-btn, #profilingForm button[type="submit"], .btn-producto-cta { padding: 0.7rem 1rem; font-size: 0.95rem; } .sobre-nosotros-inicio, .nuestro-proceso-inicio { padding: 1.2rem 0.4rem; } .tienda-introduccion { font-size: 0.95em; margin-bottom: 1.5rem;} .producto-info h3 { font-size: 1.1em;} .producto-precio .precio-final { font-size: 1.2em;} }
+  </style>
+</head>
+<body>
+  <!-- Header de Navegación -->
+  <header>
+    <nav>
+      <a href="#inicio" class="activo">Inicio</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#tienda">Tienda</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <!-- Sección de Inicio -->
+  <main id="inicio" class="visible-section">
+    <section class="hero">
+      <h1>Transformo tu Presencia Digital</h1>
+      <p>Soluciones Web y Marketing para Crecer.</p>
+      <button onclick="handleLinkClick(event, 'servicios')">Ver Mis Servicios</button>
+    </section>
+    <section class="diferenciadores">
+      <h2>¿Por qué trabajar conmigo?</h2>
+      <div id="diferenciadores-content"><ul><li>Atención personalizada y cercana</li><li>Soluciones a la medida de tu negocio</li><li>Resultados medibles y enfoque en conversión</li></ul></div>
+    </section>
+    <section class="sobre-nosotros-inicio">
+      <h2>Sobre Mí</h2>
+      <div class="sobre-nosotros-contenido"><div id="sobre-mi-media"></div><div><p>Soy un profesional apasionado por la tecnología y el marketing digital, dedicado a transformar ideas en realidades digitales impactantes. Creo en el poder de una presencia online sólida para impulsar el crecimiento de cualquier negocio.</p><p>Mi misión es ofrecer soluciones web y de marketing innovadoras, personalizadas y orientadas a resultados, construyendo una relación de confianza y colaboración con cada uno de mis clientes.</p></div></div>
+    </section>
+    <section class="nuestro-proceso-inicio">
+      <h2>Nuestro Proceso Simplificado</h2>
+      <div class="proceso-pasos-container" id="proceso-pasos-container"></div>
+    </section>
+    <section class="cta-secundaria"><button onclick="handleLinkClick(event, 'contacto')">Solicita una asesoría gratuita</button></section>
+  </main>
+
+  <!-- Sección de Servicios -->
+  <section id="servicios">
+    <h1>Servicios Digitales</h1>
+    <div id="servicios-content-wrapper"><div id="servicios-lista"></div></div>
+  </section>
+
+  <!-- Sección de Catálogo (NUEVA INTEGRACIÓN) -->
+  <section id="catalogo">
+    <h1 class="text-3xl md:text-4xl font-bold mb-4 !text-[#e91e63]">Catálogo de Proyectos</h1>
+    <p class="max-w-3xl mx-auto text-gray-400 mb-12">Una selección de demos funcionales que muestran diferentes estilos y tecnologías. Cada proyecto es una solución completa y lista para ser adaptada a tus necesidades.</p>
+    <div id="catalogo-lista" class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Las tarjetas de los proyectos se insertarán aquí con JS -->
+    </div>
+  </section>
+
+  <!-- Sección de Tienda -->
+  <section id="tienda">
+    <h1>Tienda de Servicios Digitales</h1>
+    <div id="tienda-content-wrapper"><p class="tienda-introduccion">Adquiere mis servicios empaquetados o solicita una cotización personalizada para llevar tu proyecto al siguiente nivel.</p><div class="tienda-productos-lista" id="tienda-productos-lista"></div></div>
+  </section>
+
+  <!-- Sección de Contacto -->
+  <section id="contacto">
+    <h1>Contáctame</h1>
+    <form id="profilingForm" novalidate>
+        <div class="form-group"><label for="contactNombre">Nombre Completo:</label><input type="text" id="contactNombre" name="nombre" required></div>
+        <div class="form-group"><label for="contactEmail">Correo Electrónico:</label><input type="email" id="contactEmail" name="email" required></div>
+        <div class="form-group"><label for="contactEmpresa">Nombre de la Empresa (Opcional):</label><input type="text" id="contactEmpresa" name="empresa"></div>
+        <div class="form-group"><label for="contactSitioWeb">Sitio Web Actual (Opcional):</label><input type="url" id="contactSitioWeb" name="sitioWeb" placeholder="https://www.ejemplo.com"></div>
+        <div class="form-group"><label for="contactServicioInteres">¿En qué servicio estás interesado/a?</label><select id="contactServicioInteres" name="servicioInteres" required><option value="" disabled selected>-- Elige una opción --</option><option value="diseno_desarrollo_web">Diseño y Desarrollo Web</option><option value="ecommerce_pagos">E-commerce y Pagos</option><option value="marketing_digital">Marketing Digital</option><option value="servicios_tecnicos_consultoria">Servicios Técnicos y Consultoría</option><option value="otro">Otro (por favor, especifica en el mensaje)</option></select></div>
+        <div class="form-group"><label for="contactMensaje">Tu Mensaje:</label><textarea id="contactMensaje" name="mensaje" rows="5" placeholder="Cuéntame más sobre tu proyecto o consulta..." required></textarea></div>
+        <div class="form-group terms-group"><input type="checkbox" id="contactTerminos" name="terminos" value="aceptados" required><label for="contactTerminos">He leído y acepto los <a href="#terminos" target="_blank">Términos de Servicio</a> y la <a href="#privacidad" target="_blank">Política de Privacidad</a>.</label></div>
+        <button type="submit">Enviar Mensaje</button>
+        <div id="form-status-message"></div>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Sebastian Vernis | contacto@sebastianvernis.com</p>
+  </footer>
+  
+  <!-- Modal para detalles del proyecto -->
+  <div id="project-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden opacity-0 visibility-hidden overflow-y-auto">
+    <div class="modal-content bg-[#1c1c1c] w-full max-w-4xl mx-auto rounded-lg shadow-2xl transform scale-95 my-8 border border-gray-700">
+        <div class="p-4 flex justify-between items-center border-b border-gray-700">
+            <h3 id="modal-title" class="text-2xl font-bold text-[#e91e63]"></h3>
+            <button class="close-modal-btn text-gray-400 hover:text-white text-4xl">&times;</button>
+        </div>
+        <div id="modal-content-body" class="p-6 md:p-8"></div>
+    </div>
+  </div>
+
+  <!-- Script de JavaScript Integrado -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        feather.replace();
+
+        // --- BASE DE DATOS (Tu JS original + Catálogo) ---
+        const multimediaData = {
+            "vid_landing_page": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Landing%20Pages/Video_de_Landing_Page_Generado.mp4",
+            "anim_api": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/Video_Listo_CRM_ERP_App.mp4",
+            "vid_ecommerce": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Tienda/Tienda_Online_Video_Listo.mp4",
+            "img_payment_gateways": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Pagos/artbot_img_5_cyberpunk_Un_dise_o_gr_fico_profesional_.png",
+            "anim_cobros": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Pagos/Video_de_Flujo_de_Transacciones.mp4",
+            "img_social_profiles": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Redes%20Sociales/artbot_img_5_cyberpunk__Un_collage_din_mico_con_los_l.png",
+            "img_seo_local": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/SEO/2%20(5).png",
+            "img_ads": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Redes%20Sociales/artbot_img_9_cyberpunk_Un_mockup_de_un_anuncio_de_Ins.png",
+            "img_mantenimiento": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_7_cyberpunk__Una_imagen_central_de_un_escu.png",
+            "img_consultoria": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_4_cyberpunk_Mano_organizando_bloques_de_co.png",
+            "img_sobre_mi": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/AVATARES/logo%20(1).png",
+            "logo": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/AVATARES/LOGO.png",
+            "img_tienda_asesoria": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_9_cyberpunk__Una_imagen_profesional_y_limp.png",
+            "img_tienda_landing": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Landing%20Pages/artbot_img_6_cyberpunk_Landing_page_elegante_y_modern.png",
+            "img_tienda_ecommerce": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Tienda/artbot_img_2_cyberpunk__Una_composici_n_de_varios_pro.png",
+            "img_tienda_redes": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Redes%20Sociales/artbot_img_3_cyberpunk__Un_dise_o_gr_fico_con_los_log.png",
+            "img_tienda_mantenimiento": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_9_cyberpunk_Escudo_protegiendo_un_sitio_we.png",
+            "img_tienda_seo": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_5_cyberpunk__Una_imagen_de_un_reporte_o_da.png",
+            "img_tienda_branding": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Landing%20Pages/artbot_img_6_cyberpunk__Un__moodboard__digital_que_mu.png",
+            "img_tienda_gestion_redes": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Redes%20Sociales/artbot_img_1_cyberpunk__Una_composici_n_visual_que_mu.png",
+            "img_tienda_vulnerabilidades": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_7_cyberpunk__Un__cono_de_un_sitio_web_prot.png",
+            "img_tienda_hardening": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/Video_Listo_Seguridad_Web.mp4",
+            "img_tienda_consultoria_cyber": "https://storage.googleapis.com/gemini-prod-us-west1-1p-447551095424-assets/demos/sv_media/Ciberseguridad/artbot_img_9_cyberpunk__Una_imagen_de_una_persona_en_.png"
+        };
+        const multimediaMap = { 'Diseño de Landing Page Optimizada': 'vid_landing_page', 'Desarrollo de APIs Personalizadas': 'anim_api', 'E-commerce Básico (Tienda Online Sencilla)': 'vid_ecommerce', 'Integración de Pasarelas de Pago (Stripe, PayPal)': 'img_payment_gateways', 'Gestión de APIs para Cobros Digitales': 'anim_cobros', 'Creación Básica de Perfiles en Redes Sociales': 'img_social_profiles', 'SEO Local para Negocios Físicos': 'img_seo_local', 'Campañas de Publicidad en Redes (Ads)': 'img_ads', 'Mantenimiento Web y Soporte Técnico': 'img_mantenimiento', 'Consultoría Estratégica Digital (Completa)': 'img_consultoria' };
+        const tiendaMultimediaMap = { 'tienda-asesoria': 'img_tienda_asesoria', 'tienda-landingpage': 'img_tienda_landing', 'tienda-ecommerce': 'img_tienda_ecommerce', 'tienda-redes-sociales': 'img_tienda_redes', 'tienda-mantenimiento': 'img_tienda_mantenimiento', 'tienda-seo-audit': 'img_tienda_seo', 'tienda-branding': 'img_tienda_branding', 'tienda-social-media': 'img_tienda_gestion_redes', 'tienda-cyber-analisis': 'img_tienda_vulnerabilidades', 'tienda-cyber-hardening': 'img_tienda_hardening', 'tienda-cyber-consultoria': 'img_tienda_consultoria_cyber' };
+        const projectsData = [
+            { id: 'novatech', title: 'Novatech', description: 'Sitio corporativo para una empresa de tecnología, con un diseño moderno y un sistema de e-commerce simulado.', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1470&auto=format&fit=crop'], text: 'Novatech es una demo de un sitio web corporativo para una empresa de tecnología. Presenta un diseño limpio y profesional, optimizado para móviles. Incluye un catálogo de productos y una pasarela de pago simulada completa, demostrando la capacidad de integración de un e-commerce robusto.', features: ['Diseño Corporativo', 'E-commerce Simulado', 'Optimizado para Móvil'] } },
+            { id: 'hogar-ideal', title: 'Hogar Ideal', description: 'Plataforma de bienes raíces con un diseño elegante, catálogo de propiedades y un mapa interactivo de análisis de mercado.', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1470&auto=format&fit=crop'], text: 'Hogar Ideal es una demo de un portal inmobiliario. Su diseño limpio y luminoso inspira confianza. La funcionalidad clave es un mapa interactivo para el análisis de mercado de rentas, además de un sistema de reserva de citas con pasarela de pago simulada.', features: ['Mapa Interactivo (Leaflet)', 'Reserva de Citas', 'Diseño Elegante'] } },
+            { id: 'manos-que-ayudan', title: 'Manos que Ayudan', description: 'Sitio para una ONG con un diseño cálido y humano. Incluye un proceso de registro de voluntarios y donaciones en línea.', image: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1617796159339-3a3a47016a64?q=80&w=1470&auto=format&fit=crop'], text: 'Este proyecto demuestra un sitio web para una Organización No Gubernamental. El diseño busca inspirar confianza y acción. Incluye un formulario de donación con pasarela de pago y un proceso de registro para voluntarios de varios pasos.', features: ['Formulario de Donación', 'Registro de Voluntarios', 'Diseño Inspirador'] } },
+            { id: 'soluciones-expertas', title: 'Soluciones Expertas', description: 'Web para una firma legal, con un diseño sobrio y una herramienta interactiva para consultar la Constitución.', image: 'https://images.unsplash.com/photo-1589216532372-1c2a36790049?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1589216532372-1c2a36790049?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1556156155-ad7f547fc138?q=80&w=1470&auto=format&fit=crop'], text: 'Una demo para un despacho de abogados que proyecta autoridad y confianza. Su característica más destacada es una herramienta de "Constitución Interactiva" con un buscador funcional, además de perfiles de abogados con agendamiento de citas directo.', features: ['Herramienta Interactiva', 'Perfiles de Equipo', 'Diseño Corporativo'] } },
+            { id: 'celebraciones-unicas', title: 'Celebraciones Únicas', description: 'Sitio para una empresa de planificación de eventos, con un diseño elegante y un cotizador interactivo.', image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd51622?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1511795409834-ef04bbd51622?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1523438885209-e88507f1a308?q=80&w=1374&auto=format&fit=crop'], text: 'Este sitio para planificadores de eventos destaca por su diseño sofisticado y cálido. La funcionalidad principal es un cotizador interactivo que permite a los usuarios calcular costos estimados para sus eventos, ya sea eligiendo un paquete o personalizando los servicios.', features: ['Cotizador Interactivo', 'Diseño Elegante', 'Galería de Eventos'] } },
+            { id: 'tu-proximo-nivel', title: 'Tu Próximo Nivel', description: 'Plataforma educativa para una academia de idiomas, con un portal de alumnos funcional y sistema de pago.', image: 'https://images.unsplash.com/photo-1533745848184-3db07256e166?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1533745848184-3db07256e166?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1470&auto=format&fit=crop'], text: 'Demo de un sitio para una academia de idiomas. Su característica principal es un "Portal de Alumnos" con inicio de sesión (usuario: Alumno, pass: Alumno123) que permite ver horarios, descargar materiales y simular el pago de mensualidades.', features: ['Portal de Alumnos Simulado', 'Inscripción a Cursos', 'Diseño Moderno'] } },
+            { id: 'sabores-del-alma', title: 'Sabores del Alma', description: 'Sitio web para un restaurante de cocina fusión, con un diseño artístico y un sistema de reservas con pago.', image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1374&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1552529599-87e33b52a593?q=80&w=1374&auto=format&fit=crop'], text: 'Un sitio web para un restaurante de alta cocina que fusiona la gastronomía mexicana y oriental. El diseño oscuro y elegante crea una atmósfera íntima. La funcionalidad clave es un sistema de reservas que permite al cliente garantizar su mesa con un pago en línea.', features: ['Diseño Atmosférico', 'Menú Digital', 'Reservas con Pago'] } },
+            { id: 'hecho-con-amor', title: 'Hecho con Amor Boutique', description: 'E-commerce para una boutique de moda, con un diseño cálido y un proceso de compra completo y simulado.', image: 'https://images.unsplash.com/photo-1551803091-e3e4a644252d?q=80&w=1374&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1551803091-e3e4a644252d?q=80&w=1374&auto=format&fit=crop', 'https://images.unsplash.com/photo-1598554747436-c9293d6a588f?q=80&w=1374&auto=format&fit=crop'], text: 'Demo de una tienda en línea para una boutique. Presenta un diseño femenino y artesanal. La funcionalidad principal es un carrito de compras completo, desde añadir productos hasta una pasarela de pago simulada, incluyendo la aplicación de cupones de descuento.', features: ['E-commerce Completo', 'Aplicación de Cupones', 'Diseño Cálido'] } },
+            { id: 'oasis-de-paz', title: 'Oasis de Paz', description: 'Página para un centro de bienestar, con un diseño minimalista y un sistema de reservas con opción de pago en línea.', image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1520&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1520&auto=format&fit=crop', 'https://images.unsplash.com/photo-1506126613408-4e64a386f56d?q=80&w=1470&auto=format&fit=crop'], text: 'Un sitio web para un centro de bienestar que transmite calma y serenidad. Su sistema de reservas es flexible, permitiendo al cliente agendar una cita y elegir entre pagar en el establecimiento o realizar el pago en línea a través de una pasarela simulada.', features: ['Diseño Minimalista', 'Reservas Flexibles', 'Pasarela de Pago'] } },
+            { id: 'lienzo-digital', title: 'Lienzo Digital', description: 'Plataforma para artistas con tienda, filtros de búsqueda, y compra de obras de arte y servicios creativos.', image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1470&auto=format&fit=crop', details: { gallery: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1470&auto=format&fit=crop', 'https://images.unsplash.com/photo-1501139138456-029a061e44b1?q=80&w=1374&auto=format&fit=crop'], text: 'Una plataforma para artistas que funciona como galería y tienda. La funcionalidad clave es un portafolio con filtros dinámicos por categoría. Incluye un carrito de compras completo para la venta de obras y un sistema de reserva para servicios creativos.', features: ['Filtros de Portafolio', 'E-commerce de Arte', 'Reserva de Servicios'] } }
+        ];
+
+        // --- LÓGICA DE NAVEGACIÓN Y FORMULARIO (Tu JS original) ---
+        const navLinks = document.querySelectorAll('header nav a');
+        const pageSections = document.querySelectorAll('main#inicio, section#servicios, section#catalogo, section#tienda, section#contacto');
+        
+        window.handleLinkClick = function(event, targetId, subject = '') {
+            if (event && typeof event.preventDefault === 'function') { event.preventDefault(); }
+            showSection(targetId); 
+            const headerOffset = document.querySelector('header nav').offsetHeight || 70;
+            const targetElement = document.getElementById(targetId);
+            let scrollToPosition = 0; 
+            if (targetElement && targetId !== 'inicio') { const elementPosition = targetElement.offsetTop; scrollToPosition = elementPosition - headerOffset - 20;
+            } else if (targetId === 'inicio') { scrollToPosition = 0; }
+            window.scrollTo({ top: scrollToPosition, behavior: 'smooth' });
+            if (targetId === 'contacto' && subject) {
+                const mensajeTextarea = document.getElementById('contactMensaje');
+                const servicioSelect = document.getElementById('contactServicioInteres');
+                let prefilledMessage = `Hola, estoy interesado/a en el servicio: ${subject}.\n\n`;
+                if(servicioSelect){
+                    let foundMatch = false;
+                    for(let i=0; i < servicioSelect.options.length; i++){
+                        const optionText = servicioSelect.options[i].textContent.toLowerCase();
+                        const optionValue = servicioSelect.options[i].value.toLowerCase();
+                        const subjectClean = subject.toLowerCase().split('(')[0].trim();
+                        if(optionText.includes(subjectClean) || optionValue.includes(subjectClean.replace(/\s+/g, '_'))) {
+                            servicioSelect.value = servicioSelect.options[i].value;
+                            foundMatch = true;
+                            break;
+                        }
+                    }
+                    if (!foundMatch) { servicioSelect.value = "otro"; }
+                }
+                if (mensajeTextarea) { mensajeTextarea.value = prefilledMessage; mensajeTextarea.focus(); }
+            }
+        }
+
+        function showSection(targetId) {
+            pageSections.forEach(section => { section.classList.toggle('visible-section', section.id === targetId); });
+            navLinks.forEach(link => { const href = link.getAttribute('href'); link.classList.toggle('activo', href && href.substring(1) === targetId); });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) { const targetId = href.substring(1); handleLinkClick(event, targetId); }
+            });
+        });
+        
+        let initialTargetId = window.location.hash ? window.location.hash.substring(1) : 'inicio';
+        if (!document.getElementById(initialTargetId)) { initialTargetId = 'inicio'; }
+        showSection(initialTargetId); 
+        
+        if (initialTargetId !== 'inicio') {
+            setTimeout(() => { 
+                const targetElement = document.getElementById(initialTargetId);
+                if(targetElement){
+                    const headerOffset = document.querySelector('header nav').offsetHeight || 70;
+                    const elementPosition = targetElement.offsetTop;
+                    const offsetPosition = elementPosition - headerOffset - 20;
+                    window.scrollTo({ top: offsetPosition, behavior: 'auto' });
+                }
+            }, 50);
+        }
+
+        // --- RENDERIZADO DE SERVICIOS (Tu JS original) ---
+        const serviciosData = [ { titulo: "Diseño de Landing Page Optimizada", categoria: "Diseño y Desarrollo Web", enfoque: "Conversión / Específico", descripcion: "Landing pages enfocadas en la conversión, con diseño moderno, video animado y carrusel de beneficios." }, { titulo: "Desarrollo de APIs Personalizadas", categoria: "Diseño y Desarrollo Web", enfoque: "Integración / Técnico", descripcion: "Automatiza y conecta tus plataformas digitales con APIs personalizadas, adaptadas a tu negocio." }, { titulo: "E-commerce Básico (Tienda Online Sencilla)", categoria: "E-commerce y Pagos", enfoque: "E-commerce Inicial / Sencillo", descripcion: "Tienda online con catálogo, carrito de compras y proceso de pago simple. Ideal para emprendedores." }, { titulo: "Integración de Pasarelas de Pago (Stripe, PayPal)", categoria: "E-commerce y Pagos", enfoque: "E-commerce Avanzado / Seguridad", descripcion: "Integramos las principales pasarelas de pago en tu sitio o tienda online para que cobres de forma segura." }, { titulo: "Gestión de APIs para Cobros Digitales", categoria: "E-commerce y Pagos", enfoque: "Finanzas Digitales / Especializado", descripcion: "Gestionamos y optimizamos la integración de APIs de pago para que tus cobros sean eficientes y seguros." }, { titulo: "Creación Básica de Perfiles en Redes Sociales", categoria: "Marketing Digital", enfoque: "Lanzamiento Rápido / Básico", descripcion: "Creamos tus perfiles profesionales en Instagram, Facebook, TikTok y más, con diseño atractivo y checklist visual." }, { titulo: "SEO Local para Negocios Físicos", categoria: "Marketing Digital", enfoque: "Visibilidad Local / Geográfico", descripcion: "Haz que los clientes cercanos te descubran fácilmente en Google y Maps. Mejoramos tu visibilidad local." }, { titulo: "Campañas de Publicidad en Redes (Ads)", categoria: "Marketing Digital", enfoque: "Publicidad Pagada / Crecimiento", descripcion: "Campañas de anuncios segmentados en Facebook e Instagram para aumentar tu alcance y ventas." }, { titulo: "Mantenimiento Web y Soporte Técnico", categoria: "Servicios Técnicos y Consultoría", enfoque: "Seguridad / Confianza", descripcion: "Mantenemos tu sitio actualizado, seguro y optimizado, para que te enfoques en tu negocio." }, { titulo: "Consultoría Estratégica Digital (Completa)", categoria: "Servicios Técnicos y Consultoría", enfoque: "Estrategia Global / Asesoramiento", descripcion: "Te acompañamos en todo el proceso: análisis, estrategia, implementación y medición de resultados." } ];
+        
+        const serviciosContenedor = document.getElementById('servicios-lista');
+        if (serviciosContenedor) {
+            serviciosContenedor.innerHTML = ''; 
+            const serviciosPorCategoria = serviciosData.reduce((acc, servicio) => {
+                const categoria = servicio.categoria || 'Otros'; 
+                if (!acc[categoria]) acc[categoria] = [];
+                acc[categoria].push(servicio);
+                return acc;
+            }, {});
+
+            for (const categoriaNombre in serviciosPorCategoria) {
+                const categoriaDiv = document.createElement('div');
+                categoriaDiv.className = 'categoria-servicios-container';
+                const tituloCategoria = document.createElement('h2'); 
+                tituloCategoria.className = 'categoria-servicios-titulo';
+                tituloCategoria.textContent = categoriaNombre;
+                categoriaDiv.appendChild(tituloCategoria);
+                const listaServiciosDiv = document.createElement('div');
+                listaServiciosDiv.className = 'servicios-lista-categoria'; 
+                serviciosPorCategoria[categoriaNombre].forEach(servicio => {
+                    const card = document.createElement('div');
+                    card.className = 'servicio-card'; 
+                    const mediaKey = multimediaMap[servicio.titulo];
+                    const mediaSrc = multimediaData[mediaKey];
+                    let mediaElement = '<span>Sin Contenido</span>';
+                    if (mediaSrc) {
+                        if (mediaSrc.endsWith('.mp4')) { mediaElement = `<video autoplay loop muted playsinline src="${mediaSrc}"></video>`;
+                        } else if (mediaSrc.endsWith('.png')) { mediaElement = `<img src="${mediaSrc}" alt="${servicio.titulo}">`; }
+                    }
+                    card.innerHTML = `<div class="servicio-media">${mediaElement}</div><h3>${servicio.titulo}</h3><span class="enfoque">${servicio.enfoque}</span><p>${servicio.descripcion}</p>`;
+                    listaServiciosDiv.appendChild(card);
+                });
+                categoriaDiv.appendChild(listaServiciosDiv);
+                serviciosContenedor.appendChild(categoriaDiv);
+            }
+        }
+
+        // --- LÓGICA DEL NUEVO CATÁLOGO ---
+        function renderNewCatalogo() {
+            const catalogoLista = document.getElementById('catalogo-lista');
+            if (!catalogoLista) return;
+            catalogoLista.innerHTML = ''; // Limpiar antes de renderizar
+            projectsData.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'bg-[#212121] rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition duration-300 group text-left';
+                card.innerHTML = `
+                    <div class="overflow-hidden h-56">
+                        <img src="${project.image}" alt="Imagen de ${project.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-white">${project.title}</h3>
+                        <p class="text-gray-400 text-sm mb-4">${project.description}</p>
+                        <button class="view-project-btn button-style text-sm !bg-[#9c27b0] hover:!bg-[#7b1fa2]" data-project-id="${project.id}">Ver Proyecto</button>
+                    </div>
+                `;
+                catalogoLista.appendChild(card);
+            });
+        }
+
+        const modal = document.getElementById('project-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContentBody = document.getElementById('modal-content-body');
+        
+        function openModal(projectId) {
+            const project = projectsData.find(p => p.id === projectId);
+            if (!project) return;
+            modalTitle.textContent = project.title;
+            modalContentBody.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <img src="${project.details.gallery[0]}" alt="Imagen principal de ${project.title}" class="w-full h-auto object-cover rounded-lg shadow-md mb-4">
+                        <div class="grid grid-cols-3 gap-2">
+                            ${project.details.gallery.map(img => `<img src="${img}" class="h-20 w-full object-cover rounded-md cursor-pointer hover:opacity-75 transition">`).join('')}
+                        </div>
+                    </div>
+                    <div class="text-gray-300">
+                        <h4 class="font-bold text-lg mb-2 text-white">Descripción del Proyecto</h4>
+                        <p class="mb-6">${project.details.text}</p>
+                        <h4 class="font-bold text-lg mb-3 text-white">Características Clave</h4>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            ${project.details.features.map(feature => `<span class="bg-gray-700 text-gray-200 text-sm font-semibold px-3 py-1 rounded-full">${feature}</span>`).join('')}
+                        </div>
+                        <a href="#" class="button-style w-full text-center block !bg-[#e91e63] hover:!bg-[#c2185b]">Ver Demo en Vivo (Simulado)</a>
+                    </div>
+                </div>
+            `;
+            feather.replace();
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0', 'visibility-hidden'), 10);
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'visibility-hidden');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        document.getElementById('catalogo-lista').addEventListener('click', e => {
+            const button = e.target.closest('.view-project-btn');
+            if (button) {
+                openModal(button.dataset.projectId);
+            }
+        });
+
+        modal.addEventListener('click', e => {
+            if (e.target.classList.contains('modal') || e.target.classList.contains('close-modal-btn')) {
+                closeModal();
+            }
+        });
+
+        // --- El resto de tu JS original ---
+        const contactForm = document.getElementById('profilingForm');
+        const statusMessage = document.getElementById('form-status-message');
+
+        function renderizarInicio() {
+            const sobreMiMedia = document.getElementById('sobre-mi-media');
+            if (sobreMiMedia && multimediaData.img_sobre_mi) { sobreMiMedia.innerHTML = `<img src="${multimediaData.img_sobre_mi}" alt="Foto de Sebastian Vernis">`; }
+            const procesoContenedor = document.getElementById('proceso-pasos-container');
+            if (procesoContenedor) {
+                const procesoData = [ { icono: "💬", titulo: "1. Descubrimiento", texto: "Escuchamos tus ideas, analizamos tus necesidades y definimos juntos los objetivos del proyecto." }, { icono: "🎨", titulo: "2. Diseño y Estrategia", texto: "Creamos un plan detallado y un diseño visual atractivo y funcional centrado en el usuario." }, { icono: "💻", titulo: "3. Desarrollo", texto: "Construimos tu solución digital utilizando las tecnologías más adecuadas y eficientes." }, { icono: "🚀", titulo: "4. Lanzamiento y Optimización", texto: "Implementamos, probamos exhaustivamente y lanzamos tu proyecto. Luego, optimizamos." } ];
+                procesoContenedor.innerHTML = procesoData.map(paso => `<div class="proceso-paso"><div class="paso-icono">${paso.icono}</div><h3>${paso.titulo}</h3><p>${paso.texto}</p></div>`).join('');
+            }
+        }
+
+        function renderizarProductosTienda() {
+            const contenedorProductos = document.getElementById('tienda-productos-lista');
+            if (!contenedorProductos) return;
+            contenedorProductos.innerHTML = ''; 
+            const tiendaProductosData = [ { id: "tienda-asesoria", nombre: "Sesión de Asesoría Estratégica (1hr)", descripcionCorta: "Consultoría enfocada para despejar dudas y trazar un plan de acción digital.", precioOriginal: 1500, precioFinal: 1200, moneda: "MXN", disponibilidad: "Agenda tu cita" }, { id: "tienda-landingpage", nombre: "Paquete Landing Page Impacto", descripcionCorta: "Diseño y desarrollo de una landing page optimizada para conversiones.", precioOriginal: null, precioFinal: 7500, moneda: "MXN", prefijoPrecio: "Desde ", disponibilidad: "Entrega en 2-3 semanas" }, { id: "tienda-ecommerce", nombre: "Paquete E-commerce Emprendedor", descripcionCorta: "Tu tienda online básica lista para vender (hasta 20 productos).", precioOriginal: 22000, precioFinal: 18000, moneda: "MXN", prefijoPrecio: "Desde ", disponibilidad: "Entrega en 4-6 semanas" }, { id: "tienda-redes-sociales", nombre: "Kit Inicio en Redes Sociales", descripcionCorta: "Creación y optimización de perfiles en 2 plataformas sociales clave.", precioOriginal: null, precioFinal: 3500, moneda: "MXN", disponibilidad: "Entrega en 1 semana" }, { id: "tienda-mantenimiento", nombre: "Mantenimiento Web Esencial (Mensual)", descripcionCorta: "Actualizaciones, seguridad, backups y soporte básico para tu web.", precioOriginal: 2500, precioFinal: 2000, moneda: "MXN", sufijoPrecio: "/mes", disponibilidad: "Suscripción mensual" }, { id: "tienda-seo-audit", nombre: "Auditoría SEO Completa", descripcionCorta: "Análisis exhaustivo de tu sitio web para identificar oportunidades de mejora en buscadores.", precioOriginal: 6000, precioFinal: 4800, moneda: "MXN", disponibilidad: "Reporte en 5-7 días" }, { id: "tienda-branding", nombre: "Paquete de Branding Digital Inicial", descripcionCorta: "Creación de logo, paleta de colores y guía de estilo básica para tu marca.", precioOriginal: null, precioFinal: 9500, moneda: "MXN", prefijoPrecio: "Desde ", disponibilidad: "Entrega en 3-4 semanas" }, { id: "tienda-social-media", nombre: "Gestión de Redes Sociales (Básico)", descripcionCorta: "Planificación y publicación de contenido para una red social (12 posts/mes).", precioOriginal: null, precioFinal: 8000, moneda: "MXN", sufijoPrecio: "/mes", disponibilidad: "Suscripción mensual" }, { id: "tienda-cyber-analisis", nombre: "Análisis de Vulnerabilidades Web", descripcionCorta: "Identificamos y reportamos las brechas de seguridad en tu sitio web antes de que sean explotadas.", precioOriginal: 8500, precioFinal: 6999, moneda: "MXN", disponibilidad: "Reporte en 7-10 días" }, { id: "tienda-cyber-hardening", nombre: "Paquete de Hardening para CMS", descripcionCorta: "Reforzamos la seguridad de tu WordPress/Joomla, implementando las mejores prácticas de protección.", precioOriginal: null, precioFinal: 5500, moneda: "MXN", prefijoPrecio: "Desde ", disponibilidad: "Implementación en 3-5 días" }, { id: "tienda-cyber-consultoria", nombre: "Consultoría de Ciberseguridad (1hr)", descripcionCorta: "Una sesión personalizada para evaluar tu postura de seguridad y crear un plan de acción a tu medida.", precioOriginal: 2000, precioFinal: 1600, moneda: "MXN", disponibilidad: "Agenda tu sesión" } ];
+            tiendaProductosData.forEach(producto => {
+                const card = document.createElement('div');
+                card.className = 'tienda-producto-card';
+                let precioHtml = '';
+                if (producto.precioOriginal) { precioHtml += `<span class="precio-original">${producto.moneda} $${producto.precioOriginal.toLocaleString('es-MX')}</span>`; }
+                precioHtml += `<span class="precio-final">${producto.prefijoPrecio || ''}${producto.moneda} $${producto.precioFinal.toLocaleString('es-MX')}${producto.sufijoPrecio || ''}</span>`;
+                const nombreProductoEscapado = producto.nombre.replace(/'/g, "\\'");
+                const imagenKey = tiendaMultimediaMap[producto.id];
+                const imagenUrl = multimediaData[imagenKey] || 'https://placehold.co/300x170/2c2c2c/ffffff?text=Imagen+no+disponible';
+                let mediaElement = `<img src="${imagenUrl}" alt="${producto.nombre}" class="producto-imagen" onerror="this.onerror=null;this.src='https://placehold.co/300x170/2c2c2c/ffffff?text=Imagen+no+disponible';">`;
+                if (imagenUrl.endsWith('.mp4')) { mediaElement = `<video autoplay loop muted playsinline src="${imagenUrl}" class="producto-imagen"></video>`; }
+                card.innerHTML = `${mediaElement}<div class="producto-info"><h3>${producto.nombre}</h3><p class="descripcion-corta">${producto.descripcionCorta}</p><div class="producto-precio">${precioHtml}</div><p class="disponibilidad"><em>${producto.disponibilidad}</em></p><button class="btn-producto-cta" onclick="handleLinkClick(event, 'contacto', '${nombreProductoEscapado}')">Contactar</button></div>`;
+                contenedorProductos.appendChild(card);
+            });
+        }
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                // ... (tu lógica de envío de formulario) ...
+            });
+        }
+        
+        renderizarInicio();
+        renderizarProductosTienda();
+        renderNewCatalogo(); // <-- LLAMADA CORREGIDA
+    });
+  </script>
+</body>
+</html>
+
