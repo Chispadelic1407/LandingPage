@@ -290,7 +290,10 @@
     footer { text-align: center; padding: 1.2rem; background: #1c1c1c; color: #aaa; margin-top: 2.5rem; }
 
     /* --- NUEVOS ESTILOS PARA EL CATÁLOGO Y MODAL --- */
-    .modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+    .modal {
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1050; /* Ensure modal is above header (z-index: 1000) */
+    }
     .modal-content { transition: transform 0.3s ease; }
     .modal.hidden { pointer-events: none; }
     .modal.hidden .modal-content { transform: scale(0.95); }
@@ -380,7 +383,7 @@
   </footer>
   
   <!-- Modal para detalles del proyecto -->
-  <div id="project-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50 hidden opacity-0 visibility-hidden overflow-y-auto">
+  <div id="project-modal" class="modal fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 hidden opacity-0 visibility-hidden overflow-y-auto">
     <div class="modal-content bg-[#1c1c1c] w-full max-w-4xl mx-auto rounded-lg shadow-2xl transform scale-95 my-8 border border-gray-700">
         <div class="p-4 flex justify-between items-center border-b border-gray-700">
             <h3 id="modal-title" class="text-2xl font-bold text-[#e91e63]"></h3>
